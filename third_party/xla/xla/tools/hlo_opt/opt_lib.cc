@@ -30,8 +30,12 @@ limitations under the License.
 #include "absl/strings/string_view.h"
 #include "absl/synchronization/mutex.h"
 #include "xla/hlo/ir/hlo_module.h"
+#include "xla/hlo/pass/hlo_pass_pipeline.h"
 #include "xla/service/hlo_graph_dumper.h"
+#include "xla/service/hlo_module_config.h"
 #include "xla/service/platform_util.h"
+#include "xla/stream_executor/platform/initialize.h"
+#include "xla/tools/hlo_opt/transforms_pass_registry.h"
 #include "xla/xla.pb.h"
 #include "tsl/platform/statusor.h"
 
@@ -93,6 +97,21 @@ absl::StatusOr<std::optional<std::string>> OptProvider::GenerateStage(
   return std::nullopt;
 }
 
+absl::StatusOr<std::unique_ptr<HloModule>> OptProvider::GetOptimizedHlo(
+    std::unique_ptr<HloModule> module) {
+  HloPassPipeline transforms_pipeline{"transforms_pass_pipeline"};
+  buildTransformsPassPipeline(
+      transforms_pipeline,
+      module->config().debug_options().xla_enable_hlo_passes_only());
+  CHECK_OK(transforms_pipeline.Run(module.get(), {}));
+  return module;
+}
+
 std::set<std::string> OptProvider::SupportedStages() { return {"hlo", "html"}; }
 
 }  // namespace xla
+
+STREAM_EXECUTOR_REGISTER_MODULE_INITIALIZER(transforms_opt_provider, {
+  xla::OptProvider::RegisterForPlatform("transforms",
+                                        std::make_unique<xla::OptProvider>());
+});

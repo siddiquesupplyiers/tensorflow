@@ -32,6 +32,7 @@ limitations under the License.
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_join.h"
 #include "absl/strings/str_split.h"
+#include "absl/strings/string_view.h"
 #include "xla/debug_options_flags.h"
 #include "xla/hlo/ir/hlo_module.h"
 #include "xla/tools/hlo_module_loader.h"
@@ -63,12 +64,13 @@ struct HloOptConfig {
   // Optional flags.
   bool help{false};
   bool split_input_file{false};
-  std::string platform{"gpu"};
+  std::string platform{"transforms"};
   std::string input_file{""};
   std::string input_format{""};
   std::string output_file{"-"};
   std::string stage{"hlo"};
   bool list_stages{false};
+  std::string passes{""};
 };
 
 }  // namespace
@@ -156,6 +158,14 @@ absl::StatusOr<std::string> TranslateToStage(int argc, char** argv,
   std::string out_combined;
 
   for (std::unique_ptr<HloModule>& m : modules) {
+    if (!opts.passes.empty()) {
+      for (const auto& passname :
+           std::vector<std::string>(absl::StrSplit(opts.passes, ','))) {
+        DebugOptions debug_opts = m->config().debug_options();
+        debug_opts.add_xla_enable_hlo_passes_only(passname);
+        m->mutable_config().set_debug_options(debug_opts);
+      }
+    }
     TF_ASSIGN_OR_RETURN(std::optional<std::string> out,
                         provider->GenerateStage(std::move(m), opts.stage));
     if (!out.has_value()) {
@@ -209,7 +219,9 @@ int main(int argc, char** argv) {
                 "Print all supported stages for a given platform and exit"),
       tsl::Flag("split-input-file", &opts.split_input_file,
                 "Splits the input file in pieces based on '// -----' "
-                "substring, and processes each chunk independently")};
+                "substring, and processes each chunk independently"),
+      tsl::Flag("passes", &opts.passes,
+                "Comma-separated list of passes to run.")};
   // Modifies global DebugOptions, populates flags with every flag available
   // from xla.proto.
   xla::AppendDebugOptionsFlags(&flag_list);
