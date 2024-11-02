@@ -132,10 +132,10 @@ void LiteRtDestroyCompilerPlugin(LiteRtCompilerPlugin compiler_plugin) {
 LiteRtStatus LiteRtCompilerPluginPartitionModel(
     LiteRtCompilerPlugin compiler_plugin, LiteRtModel model,
     LiteRtOpList selected_ops) {
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto subgraph,
-                                 graph_tools::GetSubgraph(model));
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto ops,
-                                 graph_tools::GetSubgraphOps(subgraph));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto subgraph, litert::internal::graph_tools::GetSubgraph(model));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto ops, litert::internal::graph_tools::GetSubgraphOps(subgraph));
 
   for (auto op : ops) {
     LiteRtOpCode op_code;
@@ -153,8 +153,8 @@ namespace {
 LiteRtStatus CompileSinglePartition(LiteRtParamIndex partition_index,
                                     LiteRtSubgraph subgraph,
                                     LiteRtCompiledResultT& result) {
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto ops,
-                                 graph_tools::GetSubgraphOps(subgraph));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto ops, litert::internal::graph_tools::GetSubgraphOps(subgraph));
 
   int num_muls_in_partition = 0;
   for (auto op : ops) {

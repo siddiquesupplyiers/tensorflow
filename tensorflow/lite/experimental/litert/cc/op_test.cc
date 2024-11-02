@@ -22,10 +22,12 @@ namespace {
 
 TEST(Op, SimpleSupportedOp) {
   auto litert_model = litert::testing::LoadTestFileModel("one_mul.tflite");
-  ASSERT_RESULT_OK_ASSIGN(auto litert_subgraph,
-                          graph_tools::GetSubgraph(litert_model.get()));
-  ASSERT_RESULT_OK_ASSIGN(auto litert_ops,
-                          graph_tools::GetSubgraphOps(litert_subgraph));
+  ASSERT_RESULT_OK_ASSIGN(
+      auto litert_subgraph,
+      litert::internal::graph_tools::GetSubgraph(litert_model.get()));
+  ASSERT_RESULT_OK_ASSIGN(
+      auto litert_ops,
+      litert::internal::graph_tools::GetSubgraphOps(litert_subgraph));
 
   litert::Op op(litert_ops[0]);
   EXPECT_EQ(op.Code(), kLiteRtOpCodeTflMul);

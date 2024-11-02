@@ -26,8 +26,9 @@ namespace {
 TEST(Tensor, SimpleModel) {
   auto litert_model = litert::testing::LoadTestFileModel("one_mul.tflite");
 
-  ASSERT_RESULT_OK_ASSIGN(auto litert_subgraph,
-                          ::graph_tools::GetSubgraph(litert_model.get()));
+  ASSERT_RESULT_OK_ASSIGN(
+      auto litert_subgraph,
+      litert::internal::graph_tools::GetSubgraph(litert_model.get()));
 
   litert::Subgraph subgraph(litert_subgraph);
 

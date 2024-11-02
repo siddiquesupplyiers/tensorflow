@@ -68,12 +68,12 @@
 #define MATCH_TRUE(v) _MATCH_TRUE(v)
 #endif
 
-namespace graph_tools {
+namespace litert::internal::graph_tools {
 
 using RankedTypeInfo = std::tuple<LiteRtElementType, llvm::ArrayRef<int32_t>>;
 
 using TensorUseInfo = std::tuple<LiteRtOp, LiteRtParamIndex>;
-using ::litert::BufferRef;
+using ::litert::internal::BufferRef;
 
 //===----------------------------------------------------------------------===//
 //                               Getters                                      //
@@ -394,6 +394,6 @@ inline bool MatchNoWeights(LiteRtTensor tensor) {
   return size == 0;
 }
 
-}  // namespace graph_tools
+}  // namespace litert::internal::graph_tools
 
 #endif  // TENSORFLOW_LITE_EXPERIMENTAL_LITERT_CORE_GRAPH_TOOLS_H_

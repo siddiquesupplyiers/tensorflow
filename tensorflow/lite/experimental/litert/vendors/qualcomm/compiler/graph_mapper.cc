@@ -120,18 +120,20 @@ LiteRtStatus GraphMapper::LegalizeAndRegister(LiteRtTensor litert_tensor,
 }
 
 LiteRtStatus GraphMapper::ParseLiteRtSubgraph() {
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto inputs,
-                                 graph_tools::GetSubgraphInputs(Subgraph()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto inputs,
+      litert::internal::graph_tools::GetSubgraphInputs(Subgraph()));
   litert_subgraph_inputs_ =
       absl::MakeSpan(const_cast<LiteRtTensor*>(inputs.data()), inputs.size());
 
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto outputs,
-                                 graph_tools::GetSubgraphOutputs(Subgraph()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto outputs,
+      litert::internal::graph_tools::GetSubgraphOutputs(Subgraph()));
   litert_subgraph_outputs_ =
       absl::MakeSpan(const_cast<LiteRtTensor*>(outputs.data()), outputs.size());
 
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto ops,
-                                 graph_tools::GetSubgraphOps(Subgraph()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto ops, litert::internal::graph_tools::GetSubgraphOps(Subgraph()));
   litert_subgraph_ops_ =
       absl::MakeSpan(const_cast<LiteRtOp*>(ops.data()), ops.size());
 

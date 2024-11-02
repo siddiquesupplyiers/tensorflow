@@ -162,15 +162,16 @@ void LiteRtDestroyCompilerPlugin(LiteRtCompilerPlugin compiler_plugin) {
 namespace {
 
 bool IsOpSupported(LiteRtOp op) {
-  using TyInfo = graph_tools::RankedTypeInfo;
+  using TyInfo = litert::internal::graph_tools::RankedTypeInfo;
 
   // NOTE: Currently we are demoing by just mapping simple f32 mul ops.
   // In the limit this function withh want to leverage QNN SDK's getSuportedOps
   // feature (along with our op/type mappings).
 
   static const TyInfo supported_op_type = {kLiteRtElementTypeFloat32, {2, 2}};
-  return graph_tools::MatchOpType(op, {supported_op_type, supported_op_type},
-                                  {supported_op_type}, kLiteRtOpCodeTflMul);
+  return litert::internal::graph_tools::MatchOpType(
+      op, {supported_op_type, supported_op_type}, {supported_op_type},
+      kLiteRtOpCodeTflMul);
 }
 
 }  // namespace
@@ -178,10 +179,10 @@ bool IsOpSupported(LiteRtOp op) {
 LiteRtStatus LiteRtCompilerPluginPartitionModel(
     LiteRtCompilerPlugin compiler_plugin, LiteRtModel model,
     LiteRtOpList selected_ops) {
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto subgraph,
-                                 graph_tools::GetSubgraph(model));
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto ops,
-                                 graph_tools::GetSubgraphOps(subgraph));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto subgraph, litert::internal::graph_tools::GetSubgraph(model));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto ops, litert::internal::graph_tools::GetSubgraphOps(subgraph));
 
   for (auto op : ops) {
     if (!IsOpSupported(op)) {

@@ -46,8 +46,8 @@ LiteRtStatus LegalizeSimpleOp(const Op& src, Qnn_OpConfig_t& dest,
                               GraphMapper& graph_mapper) {
   DumpLegalization(*src.Get());
   // Look up op input tensors in scope.
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto op_ins,
-                                 ::graph_tools::GetOpIns(src.Get()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto op_ins, litert::internal::graph_tools::GetOpIns(src.Get()));
   LITERT_STACK_ARRAY(Qnn_Tensor_t, qnn_op_ins, op_ins.size(), QNN_TENSOR_INIT);
 
   Qnn_Tensor_t* cur_qnn_op_in = qnn_op_ins;
@@ -59,8 +59,8 @@ LiteRtStatus LegalizeSimpleOp(const Op& src, Qnn_OpConfig_t& dest,
 
   // Legalize op outputs and update scope.
 
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto op_outs,
-                                 ::graph_tools::GetOpOuts(src.Get()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto op_outs, litert::internal::graph_tools::GetOpOuts(src.Get()));
   LITERT_STACK_ARRAY(Qnn_Tensor_t, qnn_op_outs, op_outs.size(),
                      QNN_TENSOR_INIT);
 

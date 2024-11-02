@@ -34,12 +34,12 @@ using ::testing::Eq;
 using ::testing::Pointwise;
 using ::testing::StartsWith;
 
-using ::litert::BufferRef;
-using ::litert::Mallocator;
-using ::litert::MutableBufferRef;
-using ::litert::Newlocator;
-using ::litert::OwningBufferRef;
+using ::litert::internal::BufferRef;
 using ::litert::internal::FbBufToStr;
+using ::litert::internal::Mallocator;
+using ::litert::internal::MutableBufferRef;
+using ::litert::internal::Newlocator;
+using ::litert::internal::OwningBufferRef;
 
 static constexpr size_t kOffset = 4;
 

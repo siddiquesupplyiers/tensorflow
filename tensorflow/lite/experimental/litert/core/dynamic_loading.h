@@ -22,7 +22,7 @@
 #include "tensorflow/lite/experimental/litert/c/litert_common.h"
 #include "tensorflow/lite/experimental/litert/c/litert_logging.h"
 
-namespace litert {
+namespace litert::internal {
 
 constexpr absl::string_view kLiteRtSharedLibPrefix = "libLiteRt";
 
@@ -61,6 +61,6 @@ inline static LiteRtStatus ResolveLibSymbol(void* lib_handle,
 LiteRtStatus FindLiteRtSharedLibs(absl::string_view search_path,
                                   std::vector<std::string>& results);
 
-}  // namespace litert
+}  // namespace litert::internal
 
 #endif  // TENSORFLOW_LITE_EXPERIMENTAL_LITERT_CORE_DYNAMIC_LOADING_H_

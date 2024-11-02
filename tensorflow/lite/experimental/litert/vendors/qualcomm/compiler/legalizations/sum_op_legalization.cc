@@ -57,16 +57,16 @@ LiteRtStatus SumOpLegalization::LegalizeOp(const Op& src, Qnn_OpConfig_t& dest,
                                            kQnnSumOpTypeName.data(), dest));
 
   // QNN reduce sum op expects 1 input tensor.
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto op_ins,
-                                 ::graph_tools::GetOpIns(src.Get()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto op_ins, litert::internal::graph_tools::GetOpIns(src.Get()));
   LITERT_STACK_ARRAY(Qnn_Tensor_t, qnn_op_ins, kReduceSumOpInputSize,
                      QNN_TENSOR_INIT);
   LITERT_RETURN_STATUS_IF_NOT_OK(
       graph_mapper.LookupInScope(op_ins[0], qnn_op_ins[0]));
 
   // QNN sum op expects 1 output tensor.
-  LITERT_ASSIGN_OR_RETURN_STATUS(auto op_outs,
-                                 ::graph_tools::GetOpOuts(src.Get()));
+  LITERT_ASSIGN_OR_RETURN_STATUS(
+      auto op_outs, litert::internal::graph_tools::GetOpOuts(src.Get()));
   LITERT_STACK_ARRAY(Qnn_Tensor_t, qnn_op_outs, kReduceSumOpOutputSize,
                      QNN_TENSOR_INIT);
   LITERT_RETURN_STATUS_IF_NOT_OK(

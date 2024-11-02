@@ -29,7 +29,7 @@
 #include "absl/strings/string_view.h"
 #include "absl/types/span.h"
 
-namespace litert {
+namespace litert::internal {
 
 //===----------------------------------------------------------------------===//
 //
@@ -336,13 +336,16 @@ class OwningBufferRef : public MutableBufferRef<ByteT> {
   // Debug string.
   absl::string_view TypeName() const override { return "OwningBufferRef"; }
 };
+
 template <typename ByteT = uint8_t, class Allocator = Newlocator<ByteT>>
 OwningBufferRef(const ByteT*, size_t) -> OwningBufferRef<ByteT, Allocator>;
+
 template <typename ByteT = uint8_t, class Allocator = Newlocator<ByteT>>
 OwningBufferRef(ByteT*, size_t) -> OwningBufferRef<ByteT, Allocator>;
+
 template <typename ByteT = char, class Allocator = Newlocator<ByteT>>
 OwningBufferRef(const char*) -> OwningBufferRef<ByteT, Allocator>;
 
-}  // namespace litert
+}  // namespace litert::internal
 
 #endif  // TENSORFLOW_LITE_EXPERIMENTAL_LITERT_CORE_UTIL_BUFFER_REF_H_
